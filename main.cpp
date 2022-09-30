@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+ifstream f("date.in");
+
+
 class Person {
     public:
         string mName; 
@@ -262,31 +265,85 @@ class Block : protected Building {
 };
 
 int main() {
-    Person p1("Aaaa", 40, 5000);
-    Person p2("Bbbb", 35, 6500);
-    Person p3("Cccc", 60, 8500);
-    Person p4("Dddd", 70, 10090);
-
-    // if (p1 < p2) {
-    //     cout << "DA";
-    // }
-
-    CityHall ch1("sector2");
-
-    ch1.add(p1);
-    ch1.add(p2);
-    ch1.add(p3);
-    ch1 + p4;
-
-    ch1.print();
-
-    ch1.remove(p2);
-
-    -ch1;
-
-    ch1.print();
+    char* command = (char*) malloc(200);
 
 
+    while (true) {
+        char* token = strtok(command, " \n\0");
+        if (f.eof()) break;
+        fgets(command, 200, stdin);
+        
+        if (strcmp(token, "add") == 0) {
+            token = strtok(NULL, " \n\0");
+            if (strcmp(token, "CityHall") == 0) {
+
+            } else if (strcmp(token, "Hospital") == 0) {
+
+            } else if (strcmp(token, "PoliceStation") == 0) {
+
+            } else if (strcmp(token, "House") == 0) {
+
+            } else if (strcmp(token, "Block") == 0) {
+
+            }
+
+            if (strcmp(token, "coordinator") == 0) {
+
+            } else if (strcmp(token, "employee") == 0) {
+
+            } else if (strcmp(token, "citizen") == 0) {
+
+            } 
+
+        } else if (strcmp(token, "remove") == 0) {
+            token = strtok(NULL, " \n\0");
+            if (strcmp(token, "CityHall") == 0) {
+
+            } else if (strcmp(token, "Hospital") == 0) {
+
+            } else if (strcmp(token, "PoliceStation") == 0) {
+
+            } else if (strcmp(token, "House") == 0) {
+
+            } else if (strcmp(token, "Block") == 0) {
+
+            }
+
+            if (strcmp(token, "coordinator") == 0) {
+
+            } else if (strcmp(token, "employee") == 0) {
+
+            } else if (strcmp(token, "citizen") == 0) {
+
+            } 
+        }
+
+    }
+    // Person p1("Aaaa", 40, 5000);
+    // Person p2("Bbbb", 35, 6500);
+    // Person p3("Cccc", 60, 8500);
+    // Person p4("Dddd", 70, 10090);
+
+    // // if (p1 < p2) {
+    // //     cout << "DA";
+    // // }
+
+    // CityHall ch1("primarie");
+
+    // ch1.add(p1);
+    // ch1.add(p2);
+    // ch1.add(p3);
+    // ch1 + p4;
+
+    // ch1.print();
+
+    // ch1.remove(p2);
+
+    // -ch1;
+
+    // ch1.print();
+
+    f.close();
 
     return 0;
 }
