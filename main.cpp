@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-ifstream f("date.in");
 
 
 class Person {
@@ -53,10 +52,10 @@ class Building {
     public:
         virtual void add(const Person obj) = 0;
         virtual void remove(const Person obj) = 0;
-        
-        virtual Building* operator + (const Person obj) = 0;
+
+        virtual Building* operator + (const Person &obj) = 0;
         virtual Building* operator - () {return nullptr;}
-        virtual Building* operator - (const Person obj) {return nullptr;}
+        virtual Building* operator - (const Person &obj) {return nullptr;}
 
         const string getBuildingName() {return mBuildingName;}
         const string getType() {return mType;}
@@ -76,7 +75,7 @@ class Building {
 
 class CityHall : protected Building {
     public:
-        CityHall* operator + (const Person obj) {
+        CityHall* operator + (const Person &obj) {
             if (mCoordinator == Person("", 0, 0))
                 mCoordinator = obj;
 
@@ -102,7 +101,7 @@ class CityHall : protected Building {
             cout << mBuildingName << " " << mType << ' ';
             cout << mCoordinator;
             cout << '\n';
-            
+            cout << "Citizens: \n";
             for (auto i = mCitizens.begin(); i != mCitizens.end(); i++) cout << *i << "\n";
         }
 
@@ -115,13 +114,13 @@ class CityHall : protected Building {
 
 class Hospital : protected Building {
     public:
-        Hospital* operator + (const Person obj) {
+        Hospital* operator + (const Person &obj) {
             mEmployees.push_back(obj);
 
             return this;
         }
 
-        Hospital* operator - (const Person obj) {
+        Hospital* operator - (const Person &obj) {
             mEmployees.erase(std::remove(mEmployees.begin(), mEmployees.end(), obj), mEmployees.end());
 
             return this;
@@ -135,6 +134,16 @@ class Hospital : protected Building {
             mCitizens.erase(std::remove(mCitizens.begin(), mCitizens.end(), obj), mCitizens.end());
         }
  
+        void print() {
+            cout << mBuildingName << " " << mType << ' ';
+            cout << mCoordinator;
+            cout << '\n';
+            cout << "Employees: \n";
+            for (auto i = mEmployees.begin(); i != mEmployees.end(); i++) cout << *i << "\n";
+            cout << "\nCitizens: \n";
+            for (auto i = mCitizens.begin(); i != mCitizens.end(); i++) cout << *i << "\n";
+        }
+
         Hospital(string name) : Building(name, "Hospital") {
             mCitizens.clear();
             mEmployees.clear();
@@ -143,13 +152,13 @@ class Hospital : protected Building {
 
 class PoliceStation : protected Building {
     public:
-        PoliceStation* operator + (const Person obj) {
+        PoliceStation* operator + (const Person &obj) {
             mEmployees.push_back(obj);
 
             return this;
         }
 
-        PoliceStation* operator - (const Person obj) {
+        PoliceStation* operator - (const Person &obj) {
             mEmployees.erase(std::remove(mEmployees.begin(), mEmployees.end(), obj), mEmployees.end());
 
             return this;
@@ -163,6 +172,17 @@ class PoliceStation : protected Building {
             mCitizens.erase(std::remove(mCitizens.begin(), mCitizens.end(), obj), mCitizens.end());
         }
 
+        void print() {
+            cout << mBuildingName << " " << mType << ' ';
+            cout << mCoordinator;
+            cout << '\n';
+            
+            cout << "Employees: \n";
+            for (auto i = mEmployees.begin(); i != mEmployees.end(); i++) cout << *i << "\n";
+            cout << "\nCitizens: \n";
+            for (auto i = mCitizens.begin(); i != mCitizens.end(); i++) cout << *i << "\n";
+        }
+
         PoliceStation(string name) : Building(name, "PoliceStation") {
             mCitizens.clear();
             mEmployees.clear();
@@ -173,7 +193,7 @@ class House : protected Building {
     private:
         unsigned int mMaxNumber;
     public:
-        House* operator + (const Person obj) {
+        House* operator + (const Person &obj) {
             if (mCoordinator == Person("", 0, 0)) {
                 mCoordinator = obj;
                 add(obj);
@@ -197,6 +217,15 @@ class House : protected Building {
                 mCitizens.erase(std::remove(mCitizens.begin(), mCitizens.end(), obj), mCitizens.end());
         }
 
+        void print() {
+            cout << mBuildingName << " " << mType << ' ';
+            cout << mCoordinator;
+            cout << '\n';
+
+            cout << "Citizens: \n";            
+            for (auto i = mCitizens.begin(); i != mCitizens.end(); i++) cout << *i << "\n";
+        }
+
         House(string name, unsigned int maxnumber) : Building(name, "House") {
             mMaxNumber = maxnumber;
             mCitizens.clear();
@@ -207,8 +236,9 @@ class House : protected Building {
 class Block : protected Building {
     private:
         unsigned int mMaxNumberPerFloor;
+        unsigned int floors;
     public:
-        Block* operator + (const Person obj) {
+        Block* operator + (const Person &obj) {
             if (mCoordinator == Person("", 0, 0)) {
                 mCoordinator = obj;
             }
@@ -254,6 +284,17 @@ class Block : protected Building {
             }
         }
 
+        void print() {
+            cout << mBuildingName << " " << mType << ' ' << mMaxNumberPerFloor << " " << m;
+            cout << mCoordinator;
+            cout << '\n';
+
+            cout << "Citizens: \n";            
+            for (auto i = mCitizens.begin(); i != mCitizens.end(); i++) cout << *i << "\n";
+        }
+
+        
+
         Block (string name, unsigned int floors, unsigned int maxperfloor) : Building(name, "Block") {
             mMaxNumberPerFloor = maxperfloor;
             mCitizens.clear();
@@ -264,61 +305,135 @@ class Block : protected Building {
         }
 };
 
+
+
+ostream& operator<<(ostream& output, const vector<CityHall> vect) {
+    for (auto it : vect) it.print();
+
+    return output;
+}
+
+ostream& operator<<(ostream& output, const vector<Hospital> vect) {
+    for (auto it : vect) it.print();
+
+    return output;
+}
+
+ostream& operator<<(ostream& output, const vector<PoliceStation> vect) {
+    for (auto it : vect) it.print();
+
+    return output;
+}
+
+ostream& operator<<(ostream& output, const vector<House> vect) {
+    for (auto it : vect) it.print();
+
+    return output;
+}
+
+ostream& operator<<(ostream& output, const vector<Block> vect) {
+    for (auto it : vect) it.print();
+
+    return output;
+}
+
+void print_city(vector<CityHall> cityhalls, vector<Hospital> hospitals, vector<PoliceStation> policestations, vector<House> houses, vector<Block> blocks) {
+    cout << "\nCityHalls: \n" << cityhalls << '\n';
+    cout << "\nHospitals: \n" << hospitals << '\n';
+    cout << "\nPoliceStations: \n" << policestations << '\n';
+    cout << "\nHouses: \n" << houses << '\n';
+    cout << "\nBlocks: \n" << blocks << '\n';
+}
+
 int main() {
+    vector<CityHall> cityhalls;
+    vector<Hospital> hospitals;
+    vector<PoliceStation> policestations;
+    vector<House> houses;
+    vector<Block> blocks;
+    
     char* command = (char*) malloc(200);
 
+    // fgets(command, 200, stdin);
 
     while (true) {
-        char* token = strtok(command, " \n\0");
-        if (f.eof()) break;
         fgets(command, 200, stdin);
+        char* token = strtok(command, " \n\0");
+        // if (f.eof()) break;
+        // fgets(command, 200, stdin);
         
-        if (strcmp(token, "add") == 0) {
+        if (strstr(token, "add")) {
             token = strtok(NULL, " \n\0");
-            if (strcmp(token, "CityHall") == 0) {
+            if (strstr(token, "CityHall")) {\
+                token = strtok(NULL, " \n\0");
+                cityhalls.push_back(CityHall(token));
+                // cout << cityhalls;
 
-            } else if (strcmp(token, "Hospital") == 0) {
+            } else if (strstr(token, "Hospital")) {
+                token = strtok(NULL, " \n\0");
+                hospitals.push_back(Hospital(token));
 
-            } else if (strcmp(token, "PoliceStation") == 0) {
+            } else if (strstr(token, "PoliceStation")) {
+                token = strtok(NULL, " \n\0");
+                policestations.push_back(PoliceStation(token));
 
-            } else if (strcmp(token, "House") == 0) {
+            } else if (strstr(token, "House")) {
+                token = strtok(NULL, " \n\0");
+                char* name = token;
 
-            } else if (strcmp(token, "Block") == 0) {
+                token = strtok(NULL, " \n\0");
+                int maxnr = atoi(token);
+                houses.push_back(House(name, maxnr));
 
+            } else if (strstr(token, "Block")) {
+                token = strtok(NULL, " \n\0");
+                token = strtok(NULL, " \n\0");
+                char* name = token;
+
+                token = strtok(NULL, " \n\0");
+                int floors = atoi(token);
+
+                token = strtok(NULL, " \n\0");
+                int maxnr = atoi(token);
+                blocks.push_back(Block(name, floors, maxnr));
             }
 
-            if (strcmp(token, "coordinator") == 0) {
+            if (strstr(token, "coordinator")) {
 
-            } else if (strcmp(token, "employee") == 0) {
+            } else if (strstr(token, "employee")) {
 
-            } else if (strcmp(token, "citizen") == 0) {
+            } else if (strstr(token, "citizen")) {
 
             } 
 
-        } else if (strcmp(token, "remove") == 0) {
+        } else if (strstr(token, "remove")) {
             token = strtok(NULL, " \n\0");
-            if (strcmp(token, "CityHall") == 0) {
+            if (strstr(token, "CityHall")) {
 
-            } else if (strcmp(token, "Hospital") == 0) {
+            } else if (strstr(token, "Hospital")) {
 
-            } else if (strcmp(token, "PoliceStation") == 0) {
+            } else if (strstr(token, "PoliceStation")) {
 
-            } else if (strcmp(token, "House") == 0) {
+            } else if (strstr(token, "House")) {
 
-            } else if (strcmp(token, "Block") == 0) {
+            } else if (strstr(token, "Block")) {
 
             }
 
-            if (strcmp(token, "coordinator") == 0) {
+            if (strstr(token, "coordinator")) {
 
-            } else if (strcmp(token, "employee") == 0) {
+            } else if (strstr(token, "employee")) {
 
-            } else if (strcmp(token, "citizen") == 0) {
+            } else if (strstr(token, "citizen")) {
 
             } 
-        }
+        } else if(strstr(token, "exit")) break;
 
-    }
+        
+   }
+   
+    print_city(cityhalls, hospitals, policestations, houses, blocks);
+
     // Person p1("Aaaa", 40, 5000);
     // Person p2("Bbbb", 35, 6500);
     // Person p3("Cccc", 60, 8500);
@@ -343,7 +458,6 @@ int main() {
 
     // ch1.print();
 
-    f.close();
 
     return 0;
 }
